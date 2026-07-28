@@ -1,0 +1,486 @@
+# SOP_SCD_PM_01 — Problem Management: Preventive Task Tracking on GitHub (v1)
+
+## General Document Information
+
+| Field | Value |
+|-------|-------|
+| Document ID | SOP_SCD_PM_01 |
+| Document Owner | Lopez Cross, Sebastian |
+| Current Version | 1.0 |
+
+---
+
+## Purpose
+
+Track Preventive Tasks derived from Problem Records (PRs) managed in **ServiceNow**
+within the sovereign GitHub boundary.
+
+- Problem Records are created and managed in **ServiceNow**.
+- Preventive Tasks derived from those Problem Records are tracked in **GitHub**.
+- Each Problem Record is represented by a **Parent Issue** in GitHub.
+- Each Preventive Task is a **Sub-issue** linked to the Parent Issue.
+- Multiple Preventive Tasks per Problem Record may be assigned to **different teams**.
+
+---
+
+## Two-Level Issue Structure
+
+```
+📋 PARENT ISSUE — Problem Record Tracker (PRB0110337)
+│
+├── 📌 Sub-issue 1 — Preventive Task 1 (Team A)
+├── 📌 Sub-issue 2 — Preventive Task 2 (Team B)
+├── 📌 Sub-issue 3 — Preventive Task 3 (Team A)
+├── 📌 Sub-issue 4 — Preventive Task 4 (Team C)
+└── 📌 Sub-issue 5 — Preventive Task 5 (Team B)
+```
+
+---
+
+## Recommended GitHub Repository Setup
+
+```
+Problem-Management/
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── problem-record.yml      ← Parent Issue template
+│   │   └── preventive-task.yml     ← Sub-issue template
+│   └── labels.yml
+└── README.md
+```
+
+---
+
+## Recommended Labels
+
+```yaml
+# Problem Record labels
+- name: "PR:New"
+  color: "0075ca"
+  description: "Problem Record tracker — New"
+
+- name: "PR:InProgress"
+  color: "e4e669"
+  description: "Problem Record tracker — In Progress"
+
+- name: "PR:Closed"
+  color: "0e8a16"
+  description: "Problem Record tracker — Closed"
+
+# Preventive Task labels
+- name: "PT:New"
+  color: "d93f0b"
+  description: "Preventive Task — New"
+
+- name: "PT:InProgress"
+  color: "e4e669"
+  description: "Preventive Task — In Progress"
+
+- name: "PT:Completed"
+  color: "0e8a16"
+  description: "Preventive Task — Completed"
+
+- name: "PT:Blocked"
+  color: "b60205"
+  description: "Preventive Task — Blocked"
+```
+
+---
+
+## Recommended Project Views
+
+| View | Type | Filter |
+|------|------|--------|
+| All Problem Records | Table | Label = `PR:New` OR `PR:InProgress` |
+| All Preventive Tasks | Board | Label = `PT:*`, grouped by Status |
+| Tasks by Team | Table | Label = `PT:*`, grouped by Assignment Group |
+| Blocked Tasks | Table | Label = `PT:Blocked` |
+| Completed | Table | Label = `PT:Completed` OR `PR:Closed` |
+
+---
+
+## Template 1 — Parent Issue: `problem-record.yml`
+
+```yaml
+name: Problem Record Tracker
+description: >
+  Create a parent tracking Issue for a Problem Record (PR) managed in ServiceNow.
+  Preventive Tasks derived from this PR will be created as sub-issues linked to
+  this parent.
+title: "[PR] <PRB number> — <short description>"
+labels:
+  - "PR:New"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # 🔍 Problem Record Tracker
+        ---
+        This Issue is the **parent tracking record** for a Problem Record (PR)
+        managed in **ServiceNow**.
+        > ℹ **Do not record the full Problem Record here.**
+        > This Issue exists to group and track all **Preventive Tasks** derived
+        > from the PR within the sovereign GitHub boundary.
+        > Each Preventive Task will be created as a **sub-issue** linked to
+        > this parent.
+
+  - type: input
+    id: pr-number
+    attributes:
+      label: "* Problem Record Number (ServiceNow)"
+      description: The ServiceNow Problem Record number this tracker is linked to.
+      placeholder: "PRB0110337"
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: The affected component as recorded in ServiceNow.
+      placeholder: "GCID-NW-010"
+    validations:
+      required: false
+
+  - type: input
+    id: service-offering
+    attributes:
+      label: Service Offering
+      description: The affected service offering as recorded in ServiceNow.
+      placeholder: "GCID-Network-WAN-Edge"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "* Priority"
+      description: Priority as set in ServiceNow.
+      options:
+        - 1 - Very High
+        - 2 - High
+        - 3 - Moderate
+        - 4 - Low
+        - 5 - Planning
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data-processing-security
+    attributes:
+      label: Data Processing & Security
+      options:
+        - NONE
+        - Personal Data
+        - Sensitive Personal Data
+        - Confidential
+    validations:
+      required: false
+
+  - type: input
+    id: due-date
+    attributes:
+      label: "* Due Date"
+      description: >
+        Overall due date for all Preventive Tasks under this PR (YYYY-MM-DD).
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+
+  - type: textarea
+    id: pr-summary
+    attributes:
+      label: "* Problem Summary"
+      description: >
+        Brief summary of the Problem Record — what happened and why
+        Preventive Tasks are required.
+      placeholder: |
+        - Problem description:
+        - Root cause (if identified):
+        - Why Preventive Tasks are required:
+    validations:
+      required: true
+
+  - type: textarea
+    id: preventive-tasks-overview
+    attributes:
+      label: Preventive Tasks Overview
+      description: >
+        List all Preventive Tasks to be created as sub-issues. One row per task.
+        Update the Sub-issue # column once each sub-issue has been created.
+      placeholder: |
+        | # | Subject | Assigned Team | Due Date | Sub-issue # |
+        |---|---------|---------------|----------|-------------|
+        | 1 |         |               |          |             |
+        | 2 |         |               |          |             |
+        | 3 |         |               |          |             |
+        | 4 |         |               |          |             |
+        | 5 |         |               |          |             |
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: pr-checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: The ServiceNow Problem Record number has been referenced above.
+          required: true
+        - label: A summary of the problem and reason for Preventive Tasks has been provided.
+          required: true
+        - label: This Issue contains no Customer or Confidential Data.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Next Steps
+        1. After submitting this parent Issue, populate the **Project side-panel**
+           fields: LoB, Priority, Due Date.
+        2. Create **one sub-issue per Preventive Task** using the
+           `Preventive Task` Issue template.
+        3. Link each sub-issue back to this parent using the
+           **Parent Issue** Project field.
+        4. Track overall progress via the **All Problem Records** Project view.
+        > ⚠ Sub-issues may be assigned to **different teams**.
+        > Each team works their own sub-issue independently.
+        ---
+```
+
+---
+
+## Template 2 — Sub-issue: `preventive-task.yml`
+
+```yaml
+name: Preventive Task
+description: >
+  Create a Preventive Task derived from a Problem Record (PR) in ServiceNow.
+  This Issue must be linked to a parent Problem Record Tracker Issue.
+title: "[PT] <PRB number> — <short task description>"
+labels:
+  - "PT:New"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # 🛡 Preventive Task
+        ---
+        This Issue represents a single **Preventive Task** derived from a
+        **Problem Record (PR)** in ServiceNow.
+        > ℹ **Link this Issue to the parent Problem Record Tracker** using
+        > the **Parent Issue** Project field after submitting.
+        > This Issue will be worked by the **assigned team** independently
+        > from other Preventive Tasks under the same PR.
+
+  - type: input
+    id: pr-number
+    attributes:
+      label: "* Problem Record Number (ServiceNow)"
+      description: >
+        The ServiceNow Problem Record number this task is derived from.
+      placeholder: "PRB0110337"
+    validations:
+      required: true
+
+  - type: input
+    id: pt-number
+    attributes:
+      label: ServiceNow Task Number (if available)
+      description: >
+        The ServiceNow Preventive Task number if already created there.
+      placeholder: "PTASK1170332"
+    validations:
+      required: false
+
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      placeholder: "GCID-NW-010"
+    validations:
+      required: false
+
+  - type: input
+    id: service-offering
+    attributes:
+      label: Service Offering
+      placeholder: "GCID-Network-WAN-Edge"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "* Priority"
+      options:
+        - 1 - Very High
+        - 2 - High
+        - 3 - Moderate
+        - 4 - Low
+        - 5 - Planning
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data-processing-security
+    attributes:
+      label: Data Processing & Security
+      options:
+        - NONE
+        - Personal Data
+        - Sensitive Personal Data
+        - Confidential
+    validations:
+      required: false
+
+  - type: dropdown
+    id: pt-category
+    attributes:
+      label: Preventive Task Category
+      options:
+        - "-- None --"
+        - Configuration Change
+        - Patch / Update
+        - Process Improvement
+        - Monitoring Enhancement
+        - Documentation Update
+        - Training
+        - Infrastructure Hardening
+        - Other
+    validations:
+      required: false
+
+  - type: input
+    id: assignment-group
+    attributes:
+      label: "* Assignment Group"
+      description: The team responsible for this Preventive Task.
+      placeholder: "e.g. Network Team / Security Team / Basis Team"
+    validations:
+      required: true
+
+  - type: input
+    id: due-date
+    attributes:
+      label: "* Due Date"
+      description: Due date for this specific Preventive Task (YYYY-MM-DD).
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+
+  - type: input
+    id: subject
+    attributes:
+      label: "* Subject"
+      description: Short descriptive title for this Preventive Task.
+      placeholder: "e.g. Update BGP routing policy on WAN-Edge devices"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "* Description"
+      description: >
+        Full description of what needs to be done, why, and how.
+      placeholder: |
+        - What needs to be done:
+        - Why (link to root cause):
+        - How (high-level approach):
+        - Success criteria:
+    validations:
+      required: true
+
+  - type: textarea
+    id: preventive-measure
+    attributes:
+      label: Preventive Measure
+      description: Describe the preventive measure this task implements.
+      placeholder: |
+        - Preventive measure description:
+        - How this prevents recurrence:
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: customer-rca
+    attributes:
+      label: Enable for Customer RCA Use
+      options:
+        - label: >
+            This Preventive Task is approved for inclusion in
+            Customer RCA reporting.
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # 📋 Progress & Completion
+        ---
+        *This section is updated by the **Assigned Team** as work progresses.*
+
+  - type: textarea
+    id: progress-notes
+    attributes:
+      label: Progress Notes
+      description: >
+        Document progress updates, blockers, and decisions here.
+        Add a new entry for each update — do not overwrite previous entries.
+      placeholder: |
+        ### Update — YYYY-MM-DD
+        - **Status:**
+        - **Progress:**
+        - **Blockers:**
+        - **Next steps:**
+    validations:
+      required: false
+
+  - type: textarea
+    id: completion-evidence
+    attributes:
+      label: Completion Evidence
+      description: |
+        Attach evidence that the Preventive Task has been completed.
+        Drag & drop files, screenshots, or paste outputs directly here.
+        🔒 Do **not** upload any Customer or Confidential Data.
+      placeholder: |
+        - **Completed by (Name / GitHub handle):**
+        - **Completion timestamp (UTC):**
+        - **Evidence:**
+          <drag & drop files or paste outputs here>
+        - **Outcome:**
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: completion-checklist
+    attributes:
+      label: Completion Checklist
+      options:
+        - label: Task has been completed per the description above.
+          required: false
+        - label: Completion evidence has been attached.
+          required: false
+        - label: Progress notes are up to date.
+          required: false
+        - label: Parent Problem Record Tracker Issue has been updated.
+          required: false
+        - label: This Issue contains no Customer or Confidential Data.
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        *End of Preventive Task — SOP_SCD_PM_01 v1.0*
+        ---
+```
+
+---
+
+*End of Document — SOP_SCD_PM_01 — Problem Management:
+Preventive Task Tracking on GitHub v1.0*
