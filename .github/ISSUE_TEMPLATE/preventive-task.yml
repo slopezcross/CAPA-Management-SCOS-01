@@ -1,0 +1,211 @@
+name: Preventive Task
+description: >
+  Create a Preventive Task derived from a Problem Record (PR) in ServiceNow.
+  This Issue must be linked to a parent Problem Record Tracker Issue.
+title: "[PT] <PRB number> — <short task description>"
+labels:
+  - "PT:New"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # 🛡 Preventive Task
+        ---
+        This Issue represents a single **Preventive Task** derived from a **Problem Record (PR)** in ServiceNow.
+        > ℹ **Link this Issue to the parent Problem Record Tracker** using the **Parent Issue** Project field after submitting.
+        > This Issue will be worked by the **assigned team** independently from other Preventive Tasks under the same PR.
+
+  - type: input
+    id: pr-number
+    attributes:
+      label: "* Problem Record Number (ServiceNow)"
+      description: The ServiceNow Problem Record number this task is derived from.
+      placeholder: "PRB0110337"
+    validations:
+      required: true
+
+  - type: input
+    id: pt-number
+    attributes:
+      label: ServiceNow Task Number (if available)
+      description: The ServiceNow Preventive Task number if already created there.
+      placeholder: "PTASK1170332"
+    validations:
+      required: false
+
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      placeholder: "GCID-NW-010"
+    validations:
+      required: false
+
+  - type: input
+    id: service-offering
+    attributes:
+      label: Service Offering
+      placeholder: "GCID-Network-WAN-Edge"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "* Priority"
+      options:
+        - 1 - Very High
+        - 2 - High
+        - 3 - Moderate
+        - 4 - Low
+        - 5 - Planning
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data-processing-security
+    attributes:
+      label: Data Processing & Security
+      options:
+        - NONE
+        - Personal Data
+        - Sensitive Personal Data
+        - Confidential
+    validations:
+      required: false
+
+  - type: dropdown
+    id: pt-category
+    attributes:
+      label: Preventive Task Category
+      options:
+        - -- None --
+        - Configuration Change
+        - Patch / Update
+        - Process Improvement
+        - Monitoring Enhancement
+        - Documentation Update
+        - Training
+        - Infrastructure Hardening
+        - Other
+    validations:
+      required: false
+
+  - type: input
+    id: assignment-group
+    attributes:
+      label: Assignment Group
+      description: The team responsible for this Preventive Task.
+      placeholder: "e.g. Network Team / Security Team / Basis Team"
+    validations:
+      required: true
+
+  - type: input
+    id: due-date
+    attributes:
+      label: "* Due Date"
+      description: Due date for this specific Preventive Task (YYYY-MM-DD).
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+
+  - type: input
+    id: subject
+    attributes:
+      label: "* Subject"
+      description: Short descriptive title for this Preventive Task.
+      placeholder: "e.g. Update BGP routing policy on WAN-Edge devices"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "* Description"
+      description: Full description of what needs to be done, why, and how.
+      placeholder: |
+        - What needs to be done:
+        - Why (link to root cause):
+        - How (high-level approach):
+        - Success criteria:
+    validations:
+      required: true
+
+  - type: textarea
+    id: preventive-measure
+    attributes:
+      label: Preventive Measure
+      description: Describe the preventive measure this task implements.
+      placeholder: |
+        - Preventive measure description:
+        - How this prevents recurrence:
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: customer-rca
+    attributes:
+      label: Enable for Customer RCA Use
+      options:
+        - label: This Preventive Task is approved for inclusion in Customer RCA reporting.
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # 📋 Progress & Completion
+        ---
+        *This section is updated by the **Assigned Team** as work progresses.*
+
+  - type: textarea
+    id: progress-notes
+    attributes:
+      label: Progress Notes
+      description: Document progress updates, blockers, and decisions here.
+      placeholder: |
+        ### Update — YYYY-MM-DD
+        - **Status:**
+        - **Progress:**
+        - **Blockers:**
+        - **Next steps:**
+    validations:
+      required: false
+
+  - type: textarea
+    id: completion-evidence
+    attributes:
+      label: Completion Evidence
+      description: |
+        Attach evidence that the Preventive Task has been completed.
+        Drag & drop files, screenshots, or paste outputs directly here.
+      placeholder: |
+        - **Completed by (Name / GitHub handle):**
+        - **Completion timestamp (UTC):**
+        - **Evidence:**
+          <drag & drop files or paste outputs here>
+        - **Outcome:**
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: completion-checklist
+    attributes:
+      label: Completion Checklist
+      options:
+        - label: Task has been completed per the description above.
+          required: false
+        - label: Completion evidence has been attached.
+          required: false
+        - label: Progress notes are up to date.
+          required: false
+        - label: Parent Problem Record Tracker Issue has been updated.
+          required: false
+        - label: This Issue contains no Customer or Confidential Data.
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
