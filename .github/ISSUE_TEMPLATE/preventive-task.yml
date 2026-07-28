@@ -68,7 +68,6 @@ body:
     attributes:
       label: Data Processing & Security
       options:
-        - NONE
         - Personal Data
         - Sensitive Personal Data
         - Confidential
@@ -80,7 +79,6 @@ body:
     attributes:
       label: Preventive Task Category
       options:
-        - -- None --
         - Configuration Change
         - Patch / Update
         - Process Improvement
