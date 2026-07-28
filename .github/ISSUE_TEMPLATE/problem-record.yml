@@ -1,0 +1,118 @@
+name: Problem Record Tracker
+description: >
+  Create a parent tracking Issue for a Problem Record (PR) managed in ServiceNow.
+  Preventive Tasks derived from this PR will be created as sub-issues linked to this parent.
+title: "[PR] <PRB number> — <short description>"
+labels:
+  - "PR:New"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        # 🔍 Problem Record Tracker
+        ---
+        This Issue is the **parent tracking record** for a Problem Record (PR) managed in **ServiceNow**.
+        > ℹ **Do not record the full Problem Record here.**
+        > This Issue exists to group and track all **Preventive Tasks** derived from the PR within the sovereign GitHub boundary.
+        > Each Preventive Task will be created as a **sub-issue** linked to this parent.
+
+  - type: input
+    id: pr-number
+    attributes:
+      label: "* Problem Record Number (ServiceNow)"
+      description: The ServiceNow Problem Record number this tracker is linked to.
+      placeholder: "PRB0110337"
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      description: The affected component as recorded in ServiceNow.
+      placeholder: "GCID-NW-010"
+    validations:
+      required: false
+
+  - type: input
+    id: service-offering
+    attributes:
+      label: Service Offering
+      description: The affected service offering as recorded in ServiceNow.
+      placeholder: "GCID-Network-WAN-Edge"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "* Priority"
+      description: Priority as set in ServiceNow.
+      options:
+        - 1 - Very High
+        - 2 - High
+        - 3 - Moderate
+        - 4 - Low
+        - 5 - Planning
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data-processing-security
+    attributes:
+      label: Data Processing & Security
+      options:
+        - NONE
+        - Personal Data
+        - Sensitive Personal Data
+        - Confidential
+    validations:
+      required: false
+
+  - type: input
+    id: due-date
+    attributes:
+      label: "* Due Date"
+      description: Overall due date for all Preventive Tasks under this PR (YYYY-MM-DD).
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+
+  - type: textarea
+    id: pr-summary
+    attributes:
+      label: Problem Summary
+      description: Brief summary of the Problem Record — what happened and why Preventive Tasks are required.
+      placeholder: |
+        - Problem description:
+        - Root cause (if identified):
+        - Why Preventive Tasks are required:
+    validations:
+      required: true
+
+  - type: textarea
+    id: preventive-tasks-overview
+    attributes:
+      label: Preventive Tasks Overview
+      description: List all Preventive Tasks to be created as sub-issues. One row per task.
+      placeholder: |
+        | # | Subject | Assigned Team | Due Date | Sub-issue # |
+        |---|---------|---------------|----------|-------------|
+        | 1 |         |               |          |             |
+        | 2 |         |               |          |             |
+        | 3 |         |               |          |             |
+        | 4 |         |               |          |             |
+        | 5 |         |               |          |             |
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Next Steps
+        1. After submitting this parent Issue, create **one sub-issue per Preventive Task** using the `Preventive Task` template.
+        2. Link each sub-issue back to this parent using the **Parent Issue** Project field.
+        3. Track overall progress via the **Problem Record Tracker** Project view.
+        > ⚠ Sub-issues may be assigned to **different teams**. Each team works their own sub-issue independently.
